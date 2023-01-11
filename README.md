@@ -4,7 +4,7 @@ project of BSM, option pricing and trading
 
 
 
-![alt text](https://daytradingz.com/wp-content/uploads/2021/04/best-stock-research-websites.jpg)
+![alt text](https://res.cloudinary.com/uktv/image/upload/v1390397326/x1s6udqazmdu8dozrsml.jpg)
 
 
 in process!!!!!
