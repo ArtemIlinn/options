@@ -1,5 +1,9 @@
 from scipy.stats import norm
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import yfinance as yf
+import datetime
 
 
 class VanillaOption:
@@ -63,13 +67,19 @@ class VanillaOption:
         return self.rho
 
     def vega_compute(self):
-        self.vega = vega(self.r, self.spot, self.strike, self.time, self.sigma, self.type)
+        self.vega = vega(self.r, self.spot, self.strike, self.time, self.sigma)
         return self.vega
 
 
-Standard_Error_Output = "BSM price is undefined, \
-        please male sure you use correct types of options ('call'/'put'),\
-        as well as needed parameters: ('interest rate', 'spot', 'strike', 'time', 'sigma')"
+Standard_Error_Output = f"Please make sure you use correct types of options ('call'/'put')," \
+                        f" as well as needed parameters."
+
+
+def PutCallParity(c, p, spot, strike, r, time):
+    """
+    Checks if Put-Call Parity holds, returns True is so, False otherwise
+    """
+    return c + strike * np.exp(-r * time) == p + spot
 
 
 def d1(r, spot, strike, time, sigma):
@@ -96,7 +106,7 @@ def BSM(r, spot, strike, time, sigma, type):
         return bsm_price
 
     except:
-        raise Standard_Error_Output
+        raise Exception(Standard_Error_Output)
 
 
 def delta(r, spot, strike, time, sigma, type):
@@ -114,7 +124,7 @@ def delta(r, spot, strike, time, sigma, type):
         return delta_value
 
     except:
-        raise Standard_Error_Output
+        raise Exception(Standard_Error_Output)
 
 
 def gamma(r, spot, strike, time, sigma, type):
@@ -128,7 +138,7 @@ def gamma(r, spot, strike, time, sigma, type):
         return gamma_value
 
     except:
-        raise Standard_Error_Output
+        raise Exception(Standard_Error_Output)
 
 
 def theta(r, spot, strike, time, sigma, type):
@@ -148,7 +158,7 @@ def theta(r, spot, strike, time, sigma, type):
 
         return theta_value
     except:
-        raise Standard_Error_Output
+        raise Exception(Standard_Error_Output)
 
 
 def rho(r, spot, strike, time, sigma, type):
@@ -166,10 +176,10 @@ def rho(r, spot, strike, time, sigma, type):
         return rho_value * 0.01
 
     except:
-        raise Standard_Error_Output
+        raise Exception(Standard_Error_Output)
 
 
-def vega(r, spot, strike, time, sigma, type):
+def vega(r, spot, strike, time, sigma):
     """
     Returns Vega greek of an option given
     """
@@ -179,5 +189,96 @@ def vega(r, spot, strike, time, sigma, type):
         vega_value = spot * norm.pdf(d1_value, 0, 1) * np.sqrt(time)
         return vega_value * 0.01
     except:
-        raise Standard_Error_Output
+        raise Exception(Standard_Error_Output)
+
+'''
+Greek Graphs:
+'''
+
+
+def greek_func(greek_name, r, spot, strike=55, time=1, sigma=0.08, type='call'):
+    if greek_name == 'delta':
+        return delta(r, spot, strike, time, sigma, type)
+    elif greek_name == 'gamma':
+        return gamma(r, spot, strike, time, sigma, type)
+    elif greek_name == 'rho':
+        return rho(r, spot, strike, time, sigma, type)
+    elif greek_name == 'theta':
+        return theta(r, spot, strike, time, sigma, type)
+    elif greek_name == 'vega':
+        return vega(r, spot, strike, time, sigma)
+    else:
+        raise Exception("Greek has to be one of 'delta', 'gamma', 'rho', 'theta', 'vega'")
+
+
+def greek_plot(df_prices, r=0.03, strike=55, time=1, sigma=0.08, type='both', greek_name='delta'):
+    if 'Spot' not in df_prices.columns:
+        raise Exception("Column 'Spot' is not in the data frame")
+
+    df_pr = pd.DataFrame()
+
+    if type == 'both':
+
+        df_pr["{greek_name} for {type} {vol}% Vol".format(greek_name=greek_name, type='call', vol=sigma * 100)] = \
+            df_prices['Spot'].apply(lambda x: greek_func(greek_name, r=r, spot=x, strike=strike,
+                                                         time=time, sigma=sigma, type='call'))
+
+        df_pr["{greek_name} for {type} {vol}% Vol".format(greek_name=greek_name, type='put', vol=sigma * 100)] = \
+            df_prices['Spot'].apply(lambda x: greek_func(greek_name, r=r, spot=x, strike=strike,
+                                                         time=time, sigma=sigma, type='put'))
+
+    elif type == 'call' or type == 'put':
+        df_pr["{greek_name} for {type} {vol}% Vol".format(greek_name=greek_name, type=type, vol=sigma * 100)] = \
+            df_prices['Spot'].apply(lambda x: greek_func(greek_name, r=r, spot=x, strike=strike,
+                                                         time=time, sigma=sigma, type=type))
+
+    else:
+        raise Exception(Standard_Error_Output)
+
+    ax = df_pr.plot(kind='line')
+    ax.axhline(0, linestyle='--', color='grey')
+    plt.xlabel("Spot")
+    plt.ylabel(greek_name)
+    plt.title(f"Black-Scholes {greek_name}")
+    plt.show()
+
+
+def speed(r, spot, strike, time, sigma, type, D):
+    """
+    Returns the speed of an option - the rate of change of the gamma with respect to the stock
+    price.
+    """
+    if type == 'call' or type == 'put':
+        d1_value = d1(r, spot, strike, time, sigma)
+        return -np.exp(-D * time) * norm.pdf(d1_value, 0, 1) / (spot**2 * sigma**2 * time) * (d1_value * np.sqrt(time))
+
+    else:
+        raise Exception(Standard_Error_Output)
+
+
+def get_chain_yf():
+    pass
+
+
+def implied_vol(market_price, r, spot, strike, time, tol=0.00001, iterations=100):
+    """
+        Return Implied Volatility of European Option using Newton Raphson method,
+        knowing standard parameters with addition of error tolerance and number of iterations.
+        And choosing sigma to estimate:
+    """
+
+    sigma = 0.3  ## initial volatility guess
+
+    for iteration in range(iterations):
+
+        difference = BSM(r, spot, strike, time, sigma, type) - market_price
+
+        if abs(difference) < tol:
+            break
+
+        sigma = sigma - difference / vega(r, spot, strike, time, sigma)
+
+    return sigma  # IV
+
+
 
