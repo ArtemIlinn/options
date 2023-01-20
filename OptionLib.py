@@ -166,7 +166,7 @@ def rho(r, spot, strike, time, sigma, type):
     Returns Rho greek of an option given
     """
     d2_value = d2(r, spot, strike, time, sigma)
-    # rho_calc = K*T*np.exp(-r*T)*norm.cdf(d2, 0, 1)
+    
     try:
         if type == 'call':
             rho_value = strike * time * np.exp(-r * time) * norm.cdf(d2_value, 0, 1)
