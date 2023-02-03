@@ -90,7 +90,7 @@ def d2(r, spot, strike, time, sigma):
     return d1(r, spot, strike, time, sigma) - sigma * np.sqrt(time)
 
 
-def BSM(r, spot, strike, time, sigma, type):
+def BSM(r, spot, strike, time, sigma, type='call'):
     """
     Returns Black-Scholes-Merton Price of and Call/Put option
     """
@@ -107,6 +107,11 @@ def BSM(r, spot, strike, time, sigma, type):
 
     except:
         raise Exception(Standard_Error_Output)
+
+
+'''
+Greeks:
+'''
 
 
 def delta(r, spot, strike, time, sigma, type):
@@ -166,7 +171,7 @@ def rho(r, spot, strike, time, sigma, type):
     Returns Rho greek of an option given
     """
     d2_value = d2(r, spot, strike, time, sigma)
-    
+    # rho_calc = K*T*np.exp(-r*T)*norm.cdf(d2, 0, 1)
     try:
         if type == 'call':
             rho_value = strike * time * np.exp(-r * time) * norm.cdf(d2_value, 0, 1)
@@ -191,8 +196,9 @@ def vega(r, spot, strike, time, sigma):
     except:
         raise Exception(Standard_Error_Output)
 
+
 '''
-Greek Graphs:
+Greeks Graphs:
 '''
 
 
@@ -256,29 +262,105 @@ def speed(r, spot, strike, time, sigma, type, D):
         raise Exception(Standard_Error_Output)
 
 
-def get_chain_yf():
-    pass
+def imp_vol(market_price, spot, strike, time, r, type, precision=1.0e-5, iterations=200):
 
-
-def implied_vol(market_price, r, spot, strike, time, tol=0.00001, iterations=100):
     """
         Return Implied Volatility of European Option using Newton Raphson method,
         knowing standard parameters with addition of error tolerance and number of iterations.
         And choosing sigma to estimate:
     """
+    sigma = 0.5
+    for i in range(iterations):
 
-    sigma = 0.3  ## initial volatility guess
+        price = BSM(r, spot, strike, time, sigma, type)
+        vega_v = vega(r, spot, strike, time, sigma) * 100
+        diff = market_price - price
 
-    for iteration in range(iterations):
+        if abs(diff) < precision:
+            return sigma
 
-        difference = BSM(r, spot, strike, time, sigma, type) - market_price
+        sigma = sigma + diff / vega_v
 
-        if abs(difference) < tol:
-            break
+    return sigma  # Best guess
 
-        sigma = sigma - difference / vega(r, spot, strike, time, sigma)
 
-    return sigma  # IV
+def plot_iv_skew(date, threshold, df):
+    """
+    :param date: string in format of YYYY-MM-DD
+    :param threshold: a criterion of low volatility filtration
+    :param df: Options dataframe
+    :return: plots a graph of Implied Volatility Skew
+    """
 
+    df_date = df[df["expDate"] == f'{date} 23:59:59'.format(date)]
+    df_date_ = df_date[df_date.impliedVolatility >= threshold]
+
+    df_date_[["strike", "impliedVolatility"]].set_index("strike").plot(title="Implied Volatility Skew", figsize=(8, 5))
+
+
+def plot_iv_term(strike_value, threshold, df):
+    """
+    :param strike_value: value of a strike
+    :param threshold: a criterion of low volatility filtration
+    :param df: Options dataframe
+    :return: plots a graph of Implied Volatility Term Structure
+    """
+
+    df_strike = df[df["strike"] == strike_value]
+    df_strike_ = df_strike[df_strike.impliedVolatility >= threshold]
+
+    df_strike_[["expDate", "impliedVolatility"]].set_index("expDate").plot(title="Implied Volatility Term Structure",
+                                                                           figsize=(8, 5))
+
+
+def plot_iv_surface(df):
+    """
+    :param df: Options Chains Dataframe
+    :return: Plots a Graph of Implied Volatility Surface
+    """
+
+    vol_surface = (df[['daysToExp', 'strike', 'impliedVolatility']].pivot_table(
+        values='impliedVolatility', index='strike', columns='daysToExp').dropna())
+
+    plot = plt.figure(figsize=(8, 8))
+    ax = plot.add_subplot(111, projection='3d')
+
+    x, y, z = vol_surface.columns.values, vol_surface.index.values, vol_surface.values
+    X, Y = np.meshgrid(x, y)
+
+    ax.set_xlabel('Days to Expiration')
+    ax.set_ylabel('Strike')
+    ax.set_zlabel('Implied Volatility')
+    ax.set_title('Implied Volatility Surface')
+
+    ax.plot_surface(X, Y, z)
+
+
+def yf_get_chains(ticker):
+    """
+    Loads option chains data for a particular ticker from Yahoo Finance
+    """
+
+    underlying = yf.Ticker(ticker)  # addressing the underlying asset of an options
+    expiration_dates = underlying.options  # and dates of expiration
+
+    opt_data = pd.DataFrame()  # constructing the dataframe we will return
+
+    for ed in expiration_dates:
+        opt = underlying.option_chain(ed)  # getting data for a specific date
+
+        calls, puts = opt.calls, opt.puts  # call and puts
+        calls['optionType'], puts['optionType'] = 'call', 'puts'  # adding types of options to the df
+
+        ed_chain = pd.concat([calls, puts])
+        ed_chain['expDate'] = pd.to_datetime(ed) + pd.DateOffset(hours=23, minutes=59, seconds=59)
+        # adding date of expiration
+
+        opt_data = pd.concat([opt_data, ed_chain])  # adding data to the main df
+
+    opt_data['daysToExp'] = (opt_data.expDate - datetime.datetime.today()).dt.days + 1
+    # additionally let's compute days until expiration date
+
+    return opt_data
 
 
