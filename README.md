@@ -6,13 +6,8 @@ Project also includes OptionLib, which is package with operating functions for w
 
 
 
-Presentation: https://drive.google.com/file/d/1mcc20-7UnD9_TdfVT7i4UuPD78j9LENi/view?usp=sharing
-
 \
-4.2, 4.3 will be modified
-
-\
-Currently in process!!!!!!!!!!
+Currently in process!!!!!!!!!!!
 
 
 
