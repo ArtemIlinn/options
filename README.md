@@ -6,9 +6,6 @@ Project also includes OptionLib, which is package with operating functions for w
 
 
 
-\
-Currently in process!!!!!!!!!!!
-
 
 
 
