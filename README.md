@@ -7,6 +7,8 @@ Project also includes OptionLib, which is package with operating functions for w
 
 
 
+\
+Results of the project are illustrated in the following presentation https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf
 
 
 
