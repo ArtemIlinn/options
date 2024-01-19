@@ -62,7 +62,5 @@ Project also includes OptionLib, which is package with operating functions for w
 
 🐉 ```6.1.1 More experiments.ipynb``` - more LSTM predictions with and without volatility as feature, options: JPM240119C00150000, AAPL230616C00150000
 
-![alt text](https://cdn.phenompeople.com/CareerConnectResources/prod/IMC1GLOBAL/images/Untitleddesign57-1632396334098.png)
-
 
 
