@@ -38,13 +38,13 @@ Project also includes OptionLib, which is package with operating functions for w
 
 ## Hedging
 
-```4.1 Delta Hedge.ipynb``` - constructing the portfolio, delta hedging simulaton
+🛡 ```4.1 Delta Hedge.ipynb``` - constructing the portfolio, delta hedging simulaton
 
-```4.2 Deltas.ipynb``` - Heston delta, SABR delta
+⚔️ ```4.2 Deltas.ipynb``` - Heston delta, SABR delta
 
-```4.2.1 Deltas.ipynb``` - performing delta hedge
+🏹 ```4.2.1 Deltas.ipynb``` - performing delta hedge
 
-```4.3 Delta hedge & volatility.ipynb``` - performing delta hedge with volatility
+🗡 ```4.3 Delta hedge & volatility.ipynb``` - performing delta hedge with volatility
 
 ## Structural Breaks
 
@@ -60,7 +60,7 @@ Project also includes OptionLib, which is package with operating functions for w
 
 ```6.1 Predictions.ipynb``` - LSTM predictions with and without volatility as feature
 
-```6.1.1 More experiments.ipynb``` - more LSTM predictions with and without volatility as feature, options: JPM240119C00150000, AAPL230616C00150000, 
+```6.1.1 More experiments.ipynb``` - more LSTM predictions with and without volatility as feature, options: JPM240119C00150000, AAPL230616C00150000
 
 ![alt text](https://cdn.phenompeople.com/CareerConnectResources/prod/IMC1GLOBAL/images/Untitleddesign57-1632396334098.png)
 
