@@ -4,12 +4,13 @@ The objective of this project is to describe how the pricing, valuation, and ris
 
 Project also includes OptionLib, which is package with operating functions for working with options, volatility surface construction, stochastic models, Black-Scholes, and more...
 
-## Analytis and Rerults
+## Analytis and Results
+:tv: [Presentation](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf)
 
-:octocat: ```Task 1.ipynb ![alt text](pics/Untitled-8.png) ``` -  
-[Presentation in pdf](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf)
-\
-Results of the project are illustrated in the following presentation https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf
+:fax: [Report](https://github.com/ArtemIlinn/options/blob/main/IlinArtemOptionPricingSystemReport%20_.pdf)
+
+:scroll: [Article](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Lukyanchenko%20article.pdf) - paper on Predicting Structural Breaks of Option Price with Implied Volatility
+
 
 
 
