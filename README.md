@@ -6,13 +6,13 @@ Project also includes OptionLib, which is package with operating functions for w
 
 ## Analytis and Results
 
-👩‍🌾 [Presentation](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf)
+🔮 [Presentation](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf)
 
-:fax: [Report](https://github.com/ArtemIlinn/options/blob/main/IlinArtemOptionPricingSystemReport%20_.pdf)
+👁 [Report](https://github.com/ArtemIlinn/options/blob/main/IlinArtemOptionPricingSystemReport%20_.pdf)
 
 :scroll: [Article](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Lukyanchenko%20article.pdf) - paper on Predicting Structural Breaks of Option Price with Implied Volatility
 
-```OptionLib.py``` - python library with content and instruments of this repository
+💎 ```OptionLib.py``` - python library with content and instruments of this repository
 
 ## Data Aggregation
 
