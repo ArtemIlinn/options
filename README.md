@@ -26,7 +26,7 @@ Project also includes OptionLib, which is package with operating functions for w
 
 🦉 ```2.1 BSM Greeks Graphs.ipynb``` - option greeks
 
-🏹 ```2.2 Volatility.ipynbb``` - volatility: implied, skew, surface
+🏹 ```2.2 Volatility.ipynb``` - volatility: implied, skew, surface
 
 ## Stochastic & Numerical Models
 
