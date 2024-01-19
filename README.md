@@ -7,7 +7,7 @@ Project also includes OptionLib, which is package with operating functions for w
 ## Analytis and Rerults
 
 :octocat: ```Task 1.ipynb ![alt text](pics/Untitled-8.png) ``` -  
-![```Task 1.ipynb```](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf)
+[Presentation in pdf](https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf)
 \
 Results of the project are illustrated in the following presentation https://github.com/ArtemIlinn/options/blob/main/Ilin%20Artem%20DSBA%20212%20Option%20pricing%20system%20presentation%202023pdf.pdf
 
